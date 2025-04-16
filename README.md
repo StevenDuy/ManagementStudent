@@ -93,7 +93,7 @@ package com.yourname.assignment;
 
 ## 📬 Contact
 
-If you need help or have questions, feel free to reach out via [email/LinkedIn/GitHub Discussions/etc.].
+If you need help or have questions, feel free to reach out via [duyh030774@gmail.com].
 
 ---
 
