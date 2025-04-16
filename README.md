@@ -1,10 +1,5 @@
-Perfect! Here's a fully detailed `README.md` that’s ready to upload to GitHub. It includes instructions on how to install NetBeans, create a project, add your exported package, and run the code — step by step, for beginners too.
-
----
-
 ### 📄 `README.md`
 
-```markdown
 # 📦 Assignment - Java Package
 
 This repository contains a Java package exported from a NetBeans project. You can import and use this package in your own Java project using NetBeans.
@@ -35,7 +30,6 @@ Before you begin, make sure you have the following installed:
 - Verify the installation:
   ```bash
   java -version
-  ```
 
 ### 2. Install NetBeans
 
@@ -107,7 +101,3 @@ If you need help or have questions, feel free to reach out via [email/LinkedIn/G
 
 This project is provided for educational and demonstration purposes. You are free to modify and use it as needed.
 ```
-
----
-
-Would you like me to upload a version of this with your actual package name and class name(s) included, if I check the contents of `Assignment.rar`? I can customize it for you if you want.
