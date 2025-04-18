@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
+/**
+ * Manages a list of students with features like adding, editing, deleting,
+ * searching, sorting, and ranking based on average score.
+ */
 public class StudentManager {
     private ArrayList<Student> students;
     private HashMap<String, Student> studentMap;
@@ -16,12 +20,16 @@ public class StudentManager {
         df = new DecimalFormat("#.##");
     }
 
-    // Lấy danh sách sinh viên
+    // Get the list of all students
     public ArrayList<Student> getStudents() {
         return students;
     }
 
-    // Thêm sinh viên, trả về false nếu Student ID đã tồn tại
+    /**
+     * Adds a new student to the list.
+     * @param s The student to be added
+     * @return false if a student with the same ID already exists
+     */
     public boolean addStudent(Student s) {
         if (studentMap.containsKey(s.getId()))
             return false;
@@ -30,7 +38,12 @@ public class StudentManager {
         return true;
     }
 
-    // Chỉnh sửa sinh viên, cập nhật HashMap nếu Student ID thay đổi
+    /**
+     * Edits a student.
+     * @param oldId The previous ID of the student
+     * @param s The updated student object
+     * @return false if the new ID is already taken (when changed)
+     */
     public boolean editStudent(String oldId, Student s) {
         if (!oldId.equals(s.getId())) {
             if (studentMap.containsKey(s.getId()))
@@ -41,7 +54,11 @@ public class StudentManager {
         return true;
     }
 
-    // Xóa sinh viên theo index (dùng khi bảng không lọc)
+    /**
+     * Deletes a student by their index (use when no table filtering is applied)
+     * @param index The index in the student list
+     * @return true if deletion is successful
+     */
     public boolean deleteStudent(int index) {
         if (index < 0 || index >= students.size())
             return false;
@@ -50,7 +67,11 @@ public class StudentManager {
         return true;
     }
 
-    // Xóa sinh viên theo Student ID (dùng khi bảng có lọc, để xoá chính xác)
+    /**
+     * Deletes a student by their ID (useful when UI table is filtered)
+     * @param id The student ID
+     * @return true if deletion is successful
+     */
     public boolean deleteStudentById(String id) {
         Student s = studentMap.remove(id);
         if (s == null)
@@ -58,7 +79,11 @@ public class StudentManager {
         return students.remove(s);
     }
 
-    // Tính hạng dựa trên điểm trung bình
+    /**
+     * Calculates the rank of a student based on average score.
+     * @param avg The average score
+     * @return A string representing the student's rank
+     */
     public String calculateRank(double avg) {
         if (avg < 5)
             return "Fail";
@@ -72,46 +97,49 @@ public class StudentManager {
             return "Excellent";
     }
 
-    // --- Thuật toán Quick Sort viết lại theo dạng cơ bản ---
-    // Phương thức sắp xếp này sẽ gọi quickSortBasic() đệ quy để sắp xếp danh sách
+    /**
+     * Public method to trigger quick sort on the student list
+     * @param comp Comparator to define sort behavior
+     */
     public void quickSort(Comparator<Student> comp) {
         quickSortBasic(0, students.size() - 1, comp);
     }
 
-    // Thuật toán quick sort cơ bản sử dụng pivot là phần tử đầu tiên
+    /**
+     * Internal Quick Sort algorithm using the first element as the pivot.
+     * @param low Start index
+     * @param high End index
+     * @param comp Comparator for comparing students
+     */
     private void quickSortBasic(int low, int high, Comparator<Student> comp) {
         if (low >= high)
-            return;  // Điều kiện dừng
+            return;
 
-        // Chọn pivot là phần tử đầu tiên trong đoạn cần sắp xếp
         Student pivot = students.get(low);
         int left = low;
         int right = high;
 
-        // Di chuyển con trỏ left và right cho đến khi gặp nhau
         while (left < right) {
-            // Tìm phần tử từ bên phải nhỏ hơn pivot
-            while (left < right && comp.compare(students.get(right), pivot) >= 0) {
+            while (left < right && comp.compare(students.get(right), pivot) >= 0)
                 right--;
-            }
-            // Đưa phần tử ở vị trí right lên vị trí left
             students.set(left, students.get(right));
-            // Tìm phần tử từ bên trái lớn hơn pivot
-            while (left < right && comp.compare(students.get(left), pivot) <= 0) {
+            while (left < right && comp.compare(students.get(left), pivot) <= 0)
                 left++;
-            }
-            // Đưa phần tử ở vị trí left xuống vị trí right
             students.set(right, students.get(left));
         }
-        // Đưa pivot vào vị trí chính xác (left == right)
+
         students.set(left, pivot);
 
-        // Đệ quy sắp xếp phần bên trái và bên phải
         quickSortBasic(low, left - 1, comp);
         quickSortBasic(left + 1, high, comp);
     }
 
-    // Trả về Comparator dựa trên cột (0: ID, 1: Name, 2: Major, 3: Average Score, 4: Rank)
+    /**
+     * Returns a comparator based on the selected column and sort direction
+     * @param col The column index (0: ID, 1: Name, 2: Major, 3: Average, 4: Rank)
+     * @param ascending true if ascending order, false for descending
+     * @return A comparator for sorting
+     */
     public Comparator<Student> getComparator(int col, boolean ascending) {
         return (s1, s2) -> {
             int res = 0;
@@ -127,7 +155,11 @@ public class StudentManager {
         };
     }
 
-    // Tìm kiếm nhị phân theo điểm trung bình (nếu cần)
+    /**
+     * Binary search a student by average score (requires sorted list by score)
+     * @param target The score to search
+     * @return Index of student if found, -1 otherwise
+     */
     public int binarySearchByScore(double target) {
         int low = 0, high = students.size() - 1;
         while (low <= high) {
@@ -143,7 +175,11 @@ public class StudentManager {
         return -1;
     }
 
-    // Tìm kiếm nhanh theo Student ID
+    /**
+     * Finds a student by ID using the map for fast lookup
+     * @param id The student ID
+     * @return Student object or null if not found
+     */
     public Student findById(String id) {
         return studentMap.get(id);
     }
