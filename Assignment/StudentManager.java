@@ -72,36 +72,43 @@ public class StudentManager {
             return "Excellent";
     }
 
-    // --- Thuật toán Quick Sort với Comparator ---
+    // --- Thuật toán Quick Sort viết lại theo dạng cơ bản ---
+    // Phương thức sắp xếp này sẽ gọi quickSortBasic() đệ quy để sắp xếp danh sách
     public void quickSort(Comparator<Student> comp) {
-        quickSort(students, 0, students.size() - 1, comp);
+        quickSortBasic(0, students.size() - 1, comp);
     }
 
-    private void quickSort(ArrayList<Student> list, int low, int high, Comparator<Student> comp) {
-        if (low < high) {
-            int pi = partition(list, low, high, comp);
-            quickSort(list, low, pi - 1, comp);
-            quickSort(list, pi + 1, high, comp);
-        }
-    }
+    // Thuật toán quick sort cơ bản sử dụng pivot là phần tử đầu tiên
+    private void quickSortBasic(int low, int high, Comparator<Student> comp) {
+        if (low >= high)
+            return;  // Điều kiện dừng
 
-    private int partition(ArrayList<Student> list, int low, int high, Comparator<Student> comp) {
-        Student pivot = list.get(high);
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (comp.compare(list.get(j), pivot) <= 0) {
-                i++;
-                swap(list, i, j);
+        // Chọn pivot là phần tử đầu tiên trong đoạn cần sắp xếp
+        Student pivot = students.get(low);
+        int left = low;
+        int right = high;
+
+        // Di chuyển con trỏ left và right cho đến khi gặp nhau
+        while (left < right) {
+            // Tìm phần tử từ bên phải nhỏ hơn pivot
+            while (left < right && comp.compare(students.get(right), pivot) >= 0) {
+                right--;
             }
+            // Đưa phần tử ở vị trí right lên vị trí left
+            students.set(left, students.get(right));
+            // Tìm phần tử từ bên trái lớn hơn pivot
+            while (left < right && comp.compare(students.get(left), pivot) <= 0) {
+                left++;
+            }
+            // Đưa phần tử ở vị trí left xuống vị trí right
+            students.set(right, students.get(left));
         }
-        swap(list, i + 1, high);
-        return i + 1;
-    }
+        // Đưa pivot vào vị trí chính xác (left == right)
+        students.set(left, pivot);
 
-    private void swap(ArrayList<Student> list, int i, int j) {
-        Student temp = list.get(i);
-        list.set(i, list.get(j));
-        list.set(j, temp);
+        // Đệ quy sắp xếp phần bên trái và bên phải
+        quickSortBasic(low, left - 1, comp);
+        quickSortBasic(left + 1, high, comp);
     }
 
     // Trả về Comparator dựa trên cột (0: ID, 1: Name, 2: Major, 3: Average Score, 4: Rank)
